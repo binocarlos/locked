@@ -1,7 +1,7 @@
 locked
 ------
 
-use etcd to distribute a consensus on a single value
+use etcd to run a function on only one server in a cluster - with auto failover
 
 ## install
 
