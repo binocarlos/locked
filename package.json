@@ -1,0 +1,31 @@
+{
+  "name": "locked",
+  "version": "0.0.0",
+  "description": "use etcd to distribute a consensus on a single value",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/binocarlos/locked.git"
+  },
+  "keywords": [
+    "etcd",
+    "consensus",
+    "lock",
+    "distributed",
+    "brokerless"
+  ],
+  "author": "Kai Davenport",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/binocarlos/locked/issues"
+  },
+  "homepage": "https://github.com/binocarlos/locked",
+  "devDependencies": {
+    "tape": "^2.13.1",
+    "async": "^0.9.0",
+    "wrench": "^1.5.8"
+  }
+}
