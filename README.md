@@ -15,24 +15,18 @@ First create a locker that is pointing at some nodes of your etcd cluster
 
 ```js
 var locked = require('locked')
-var etcdjs = require('etcdjs')
+
 
 // create a locker pointing with an etcd connection string
 var locker = locked('127.0.0.1:4001,127.0.0.1:4002')
 
-// you can also pass an existing etcd object
-var locker = locked(etcdjs('127.0.0.1:4001,127.0.0.1:4002'))
-
 // create a node - this points to a single key and represents its value locked across the cluster
-var lock = locker({
+var node = locker({
 	id:'node1',     // this is auto-completed if left blank
 	path:'/master', // the etcd path we use for the lock
 	value:10 ,      // the value for this node
 	ttl:10          // we will check the lock every (ttl/2) seconds
 })
-
-// each node is given an id - this is used to determine if that node is the currently active one
-console.log(node.id())
 
 // this is run when the values changes regardless of what node is elected
 node.on('change', function(value, nodeid){
@@ -46,6 +40,13 @@ node.on('selected', function(){
 
 // this starts the lock for this node
 node.start()
+```
+
+you can also pass an existing etcdjs object:
+
+```js
+var etcdjs = require('etcdjs')
+var locker = locked(etcdjs('127.0.0.1:4001,127.0.0.1:4002'))
 ```
 
 ## api
