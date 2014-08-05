@@ -65,14 +65,6 @@ Opts has the following keys:
  * value - the value this node will write to the registry
  * ttl - the amount of seconds that each value is valid - the value is automatically refreshed every ttl/2 seconds
 
-### `node.id(done)`
-
-Get the currently active id across the lock
-
-### `node.value(done)`
-
-Get the currently active value across the lock
-
 ### `node.start()`
 
 Start the lock process for this node
@@ -80,6 +72,28 @@ Start the lock process for this node
 ### `node.stop()`
 
 Stop the lock process for this node
+
+### `node.id()`
+
+Get the currently active id across the lock
+
+### `node.value()`
+
+Get the currently active value across the lock
+
+### `node.localid()`
+
+The id for this specific node
+
+### `node.localvalue()`
+
+The value for this specific node
+
+### `node.localdata()`
+
+The data string for this specific node
+
+This is id + ':::' + value
 
 ## events
 

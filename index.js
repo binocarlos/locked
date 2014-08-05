@@ -54,7 +54,15 @@ Node.prototype.value = function(done){
 	return this.processValue('value', this._currentValue)
 }
 
+Node.prototype.localid = function(){
+	return this._opts.id
+}
+
 Node.prototype.localvalue = function(){
+	return this._opts.value
+}
+
+Node.prototype.localdata = function(){
 	return [this._id, this._value].join(':::')
 }
 
@@ -62,14 +70,14 @@ Node.prototype.tryLock = function(){
 	var self = this
 	if(!this._status) return
 	function writeBlank(done){
-		self._etcd.set(self._path, self.localvalue(), {
+		self._etcd.set(self._path, self.localdata(), {
 			prevExist:false,
 			ttl:self._ttl
 		}, done)
 	}
 	function writeNext(done){
-		self._etcd.set(self._path, self.localvalue(), {
-			prevValue:self.localvalue(),
+		self._etcd.set(self._path, self.localdata(), {
+			prevValue:self.localdata(),
 			ttl:self._ttl
 		}, done)
 	}
@@ -98,7 +106,7 @@ Node.prototype.start = function(){
 		else{
 			var nextValue = result.node.value
 			var currentValue = self._currentValue
-			var nodeValue = self.localvalue()
+			var nodeValue = self.localdata()
 			var id = self.processValue('id', nextValue)
 			var v = self.processValue('value', nextValue)
 			if(nextValue!=currentValue){
