@@ -25,7 +25,10 @@
   "homepage": "https://github.com/binocarlos/locked",
   "devDependencies": {
     "tape": "^2.13.1",
-    "async": "^0.9.0",
-    "wrench": "^1.5.8"
+    "async": "^0.9.0"
+  },
+  "dependencies": {
+    "littleid": "0.0.0",
+    "request": "^2.36.0"
   }
 }

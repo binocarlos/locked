@@ -1,0 +1,28 @@
+function tryLock(prevValue){
+	etcd.set(path, value, {
+		ttl:ttl,
+		prevValue:prevValue
+	}, function(success){
+		if(success){
+			setTimeout(function(){
+				tryLock(value)
+			}, ttl/2)
+		}
+	})
+}
+
+function checkValue(){
+	etcd.get(path, function(val){
+		if(!val){
+			tryLock()
+		}
+	})
+}
+
+function wait(){
+	etcd.wait(path, function(val){
+		if(!val){
+			tryLock()
+		}
+	})
+}
