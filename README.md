@@ -51,11 +51,11 @@ var locker = locked(etcdjs('127.0.0.1:4001,127.0.0.1:4002'))
 
 ## api
 
-### `var locker = locked(etcdhosts)`
+#### `var locker = locked(etcdhosts)`
 
 Create a new locker pointing to some of the etcd servers in your cluster - `etcdhosts` can be an array or a single address string.
 
-### `var node = locker(path, opts)`
+#### `var node = locker(path, opts)`
 
 Create a node that represents a single key - other machines will have created nodes on the same path - they are all essentially competing.
 
@@ -65,31 +65,31 @@ Opts has the following keys:
  * value - the value this node will write to the registry
  * ttl - the amount of seconds that each value is valid - the value is automatically refreshed every ttl/2 seconds
 
-### `node.start()`
+#### `node.start()`
 
 Start the lock process for this node
 
-### `node.stop()`
+#### `node.stop()`
 
 Stop the lock process for this node
 
-### `node.id()`
+#### `node.id()`
 
 Get the currently active id across the lock
 
-### `node.value()`
+#### `node.value()`
 
 Get the currently active value across the lock
 
-### `node.localid()`
+#### `node.localid()`
 
 The id for this specific node
 
-### `node.localvalue()`
+#### `node.localvalue()`
 
 The value for this specific node
 
-### `node.localdata()`
+#### `node.localdata()`
 
 The data string for this specific node
 
@@ -97,19 +97,19 @@ This is id + ':::' + value
 
 ## events
 
-### `node.on('change', function(value, nodeid){})`
+#### `node.on('change', function(value, nodeid){})`
 
 This event is triggered when the lock value has changed regardless of which node was elected.
 
 The nodeid is of the elected machine is passed as the second argument.
 
-### `node.on('select', function(value){})`
+#### `node.on('select', function(value){})`
 
 This event is triggered when the node has been elected and it's value distributed to the cluster.
 
 You can run logic in this function that should only be running on one server at a time.
 
-### `node.on('refresh', function(value){})`
+#### `node.on('refresh', function(value){})`
 
 Triggered when the currently selected node has refreshed its value
 
