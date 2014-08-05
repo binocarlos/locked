@@ -1,6 +1,6 @@
 {
   "name": "locked",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "distributed consensus on a single value using etcd",
   "main": "index.js",
   "scripts": {
