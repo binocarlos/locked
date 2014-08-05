@@ -95,6 +95,10 @@ The data string for this specific node
 
 This is id + ':::' + value
 
+#### `node.isSelected()`
+
+return boolean indicating if the node is currently the elected leader
+
 ## events
 
 #### `node.on('change', function(value, nodeid){})`

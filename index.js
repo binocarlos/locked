@@ -9,6 +9,7 @@ function Node(etcdhost, opts){
 	etcdhost = etcdhost || '127.0.0.1:4001'
 	opts = opts || {}
 	
+	this._opts = opts
 	this._id = opts.id || littleid()
 	this._etcd = typeof(etcdhost)==='string' ? etcdjs(etcdhost.split(/\s*,\s*/)) : etcdhost
 	this._path = opts.path
@@ -64,6 +65,10 @@ Node.prototype.localvalue = function(){
 
 Node.prototype.localdata = function(){
 	return [this._id, this._value].join(':::')
+}
+
+Node.prototype.isSelected = function(){
+	return this.id()==this.localid()
 }
 
 Node.prototype.tryLock = function(){

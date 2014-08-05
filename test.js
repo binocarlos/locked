@@ -47,6 +47,7 @@ tape('write a single lock', function(t){
     t.equal(values.change, 'node1:::apples', 'refresh value')
     t.equal(lock.id(), 'node1', 'id()')
     t.equal(lock.value(), 'apples', 'value()')
+    t.equal(lock.isSelected(), true, 'selected')
     lock.stop()
     t.end()
   })
