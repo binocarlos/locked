@@ -1,7 +1,7 @@
 {
   "name": "locked",
   "version": "1.0.0",
-  "description": "use etcd to run a function on only one server in a cluster - with auto failover",
+  "description": "distributed consensus on a single value using etcd",
   "main": "index.js",
   "scripts": {
     "test": "node test.js"
