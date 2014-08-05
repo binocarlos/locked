@@ -15,9 +15,13 @@ First create a locker that is pointing at some nodes of your etcd cluster
 
 ```js
 var locked = require('locked')
+var etcdjs = require('etcdjs')
 
 // create a locker pointing with an etcd connection string
 var locker = locked('127.0.0.1:4001,127.0.0.1:4002')
+
+// you can also pass an existing extjs object
+var locker = locked(etcdjs('127.0.0.1:4001,127.0.0.1:4002'))
 
 // create a node - this points to a single key and represents its value locked across the cluster
 var lock = locker({
@@ -60,11 +64,11 @@ Opts has the following keys:
  * value - the value this node will write to the registry
  * ttl - the amount of seconds that each value is valid - the value is automatically refreshed every ttl/2 seconds
 
-### `node.id()`
+### `node.id(done)`
 
 Get the currently active id across the lock
 
-### `node.value()`
+### `node.value(done)`
 
 Get the currently active value across the lock
 
@@ -89,6 +93,10 @@ The nodeid is of the elected machine is passed as the second argument.
 This event is triggered when the node has been elected and it's value distributed to the cluster.
 
 You can run logic in this function that should only be running on one server at a time.
+
+### `node.on('refresh', function(value){})
+
+Triggered when the currently selected node has refreshed its value
 
 ## license
 

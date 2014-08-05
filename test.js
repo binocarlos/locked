@@ -9,11 +9,6 @@ tape('clear out test key', function(t){
   etcd.del(testPath, {
     recursive:true
   }, function(err){
-    if(err){
-      t.fail(err, 'clear key')
-      t.end()
-      return
-    }
     t.end()
   })
 })
