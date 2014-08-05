@@ -20,7 +20,7 @@ var etcdjs = require('etcdjs')
 // create a locker pointing with an etcd connection string
 var locker = locked('127.0.0.1:4001,127.0.0.1:4002')
 
-// you can also pass an existing extjs object
+// you can also pass an existing etcd object
 var locker = locked(etcdjs('127.0.0.1:4001,127.0.0.1:4002'))
 
 // create a node - this points to a single key and represents its value locked across the cluster
