@@ -54,6 +54,45 @@ tape('write a single lock', function(t){
 
 resetEtcd()
 
-tape('end waiting', function(t){
-  t.end()
+tape('competing locks', function(t){
+  var locker = locked('127.0.0.1:4001')
+  var lock1 = locker({
+    id:'node1',
+    path:testPath,
+    value:'apples',
+    ttl:2
+  })
+  var lock2 = locker({
+    id:'node2',
+    path:testPath,
+    value:'pears',
+    ttl:2
+  })
+
+  lock1.on('select', function(){
+    console.log('lock1 selected')
+  })
+
+  lock2.on('select', function(){
+    console.log('lock2 selected')
+  })
+
+  lock1.start()
+  lock2.start()
+
+  setTimeout(function(){
+    console.log('stopping lock1')
+    lock1.stop()
+
+    setTimeout(function(){
+      t.equal(lock2.value(), 'pears')
+      t.equal(lock2.id(), 'node2')
+
+      lock1.stop()
+      lock2.stop()
+      t.end()
+    }, 3000)
+  }, 3000)
 })
+
+resetEtcd()

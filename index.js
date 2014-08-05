@@ -51,7 +51,7 @@ Node.prototype.value = function(done){
 	if(!this._currentValue){
 		return null
 	}
-	return this.processValue('id', this._currentValue)
+	return this.processValue('value', this._currentValue)
 }
 
 Node.prototype.localvalue = function(){
@@ -78,6 +78,7 @@ Node.prototype.tryLock = function(){
 			return
 		}
 		setTimeout(function(){
+			if(!self._status) return
 			writeNext(finishWrite)
 		}, (self._ttl/2)*1000)
 	}
