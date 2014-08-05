@@ -96,18 +96,20 @@ Node.prototype.start = function(){
 		}
 		else{
 			var nextValue = result.node.value
+			var currentValue = self._currentValue
+			var nodeValue = self.localvalue()
 			var id = self.processValue('id', nextValue)
 			var v = self.processValue('value', nextValue)
-			if(nextValue!=self._currentValue){
+			if(nextValue!=currentValue){
 				self.emit('change', v, id)
 				self._currentValue = nextValue
 
-				if(nextValue==self._value){
-					self.emit('select')
+				if(nextValue==nodeValue){
+					self.emit('select', v, id)
 				}
 			}
-			else if(nextValue==self._value){
-				self.emit('refresh')
+			else if(nextValue==nodeValue){
+				self.emit('refresh', v, id)
 			}			
 		}
     next(onChange)
