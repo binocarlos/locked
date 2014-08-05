@@ -1,6 +1,6 @@
 {
   "name": "locked",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "use etcd to run a function on only one server in a cluster - with auto failover",
   "main": "index.js",
   "scripts": {
