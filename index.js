@@ -96,7 +96,7 @@ Node.prototype.finishWrite = function(err, result){
 	if(err){
 		return
 	}
-	setTimeout(this.finishWriteTimed.bind(this), (this._ttl/2)*10)
+	setTimeout(this.finishWriteTimed.bind(this), (this._ttl/2)*1000)
 }
 
 Node.prototype.tryLock = function(){
