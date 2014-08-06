@@ -71,63 +71,73 @@ Node.prototype.isSelected = function(){
 	return this.id()==this.localid()
 }
 
+Node.prototype.writeBlank = function(done){
+	this._etcd.set(this._path, this.localdata(), {
+		prevExist:false,
+		ttl:this._ttl
+	}, done)
+}
+
+Node.prototype.writeNext = function(done){
+	this._etcd.set(this._path, this.localdata(), {
+		prevValue:this.localdata(),
+		ttl:this._ttl
+	}, done)
+
+}
+
+Node.prototype.finishWriteTimed = function(){
+	if(!this._status) return
+	this.writeNext(this.finishWrite.bind(this))
+}
+
+Node.prototype.finishWrite = function(err, result){
+	var self = this;
+	if(err){
+		return
+	}
+	setTimeout(this.finishWriteTimed.bind(this), (this._ttl/2)*10)
+}
+
 Node.prototype.tryLock = function(){
 	var self = this
 	if(!this._status) return
-	function writeBlank(done){
-		self._etcd.set(self._path, self.localdata(), {
-			prevExist:false,
-			ttl:self._ttl
-		}, done)
+	this.writeBlank(this.finishWrite.bind(this))
+}
+
+Node.prototype.onChange = function(err, result, next) {
+	var self = this;
+	if(!this._status) return
+	if(err) throw new Error(err)
+	if(!result) return next(onChange)
+	if(result.action=='expire'){
+		this.tryLock()
 	}
-	function writeNext(done){
-		self._etcd.set(self._path, self.localdata(), {
-			prevValue:self.localdata(),
-			ttl:self._ttl
-		}, done)
-	}
-	function finishWrite(err, result){
-		if(err){
-			return
+	else{
+		var nextValue = result.node.value
+		var currentValue = this._currentValue
+		var nodeValue = this.localdata()
+		var id = this.processValue('id', nextValue)
+		var v = this.processValue('value', nextValue)
+		if(nextValue!=currentValue){
+			this.emit('change', v, id)
+			this._currentValue = nextValue
+
+			if(nextValue==nodeValue){
+				this.emit('select', v, id)
+			}
 		}
-		setTimeout(function(){
-			if(!self._status) return
-			writeNext(finishWrite)
-		}, (self._ttl/2)*1000)
+		else if(nextValue==nodeValue){
+			this.emit('refresh', v, id)
+		}			
 	}
-	writeBlank(finishWrite)
+  next(this.onChange.bind(this))
 }
 
 Node.prototype.start = function(){
 	var self = this;
 	this._status = true
-	this._etcd.wait(this._path, function onChange(err, result, next) {
-		if(!self._status) return
-		if(err) throw new Error(err)
-		if(!result) return next(onChange)
-		if(result.action=='expire'){
-			self.tryLock()
-		}
-		else{
-			var nextValue = result.node.value
-			var currentValue = self._currentValue
-			var nodeValue = self.localdata()
-			var id = self.processValue('id', nextValue)
-			var v = self.processValue('value', nextValue)
-			if(nextValue!=currentValue){
-				self.emit('change', v, id)
-				self._currentValue = nextValue
-
-				if(nextValue==nodeValue){
-					self.emit('select', v, id)
-				}
-			}
-			else if(nextValue==nodeValue){
-				self.emit('refresh', v, id)
-			}			
-		}
-    next(onChange)
-	})
+	this._etcd.wait(this._path, this.onChange.bind(this))
 	this.tryLock({
 		prevExist:false
 	})
