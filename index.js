@@ -8,7 +8,7 @@ function Node(etcdhost, opts){
 	EventEmitter.call(this)
 	etcdhost = etcdhost || '127.0.0.1:4001'
 	opts = opts || {}
-	
+
 	this._opts = opts
 	this._id = opts.id || littleid()
 	this._etcd = typeof(etcdhost)==='string' ? etcdjs(etcdhost.split(/\s*,\s*/)) : etcdhost
@@ -33,10 +33,10 @@ Node.prototype.processValue = function(field, value){
 	value = value || ''
 	var parts = value.split(':::')
 	var id = parts.shift()
-	var value = parts.join(':::')
+	var v = parts.join(':::')
 	var obj = {
 		id:id,
-		value:value
+		value:v
 	}
 	return obj[field]
 }
@@ -129,7 +129,8 @@ Node.prototype.onChange = function(err, result, next) {
 		}
 		else if(nextValue==nodeValue){
 			this.emit('refresh', v, id)
-		}			
+		}
+		this.emit('ping', v, id)	
 	}
   next(this.onChange.bind(this))
 }

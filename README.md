@@ -101,21 +101,25 @@ return boolean indicating if the node is currently the elected leader
 
 ## events
 
-#### `node.on('change', function(value, nodeid){})`
+#### `node.on('change', function(value, leaderid){})`
 
 This event is triggered when the lock value has changed regardless of which node was elected.
 
 The nodeid is of the elected machine is passed as the second argument.
 
-#### `node.on('select', function(value){})`
+#### `node.on('select', function(value, leaderid){})`
 
 This event is triggered when the node has been elected and it's value distributed to the cluster.
 
 You can run logic in this function that should only be running on one server at a time.
 
-#### `node.on('refresh', function(value){})`
+#### `node.on('refresh', function(value, leaderid){})`
 
 Triggered when the currently selected node has refreshed its value
+
+#### `node.on('ping', function(value, leaderid){})`
+
+Triggered when the leader has checked in and confirmed its leadership
 
 ## license
 
