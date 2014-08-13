@@ -105,40 +105,40 @@ Node.prototype.tryLock = function(){
 	this.writeBlank(this.finishWrite.bind(this))
 }
 
-Node.prototype.onChange = function(err, result, next) {
-	var self = this;
-	if(!this._status) return	
-	if(err) return next(onChange)
-	if(!result) return next(onChange)
-	if(result.action=='expire'){
-		this.tryLock()
-	}
-	else{
-		var nextValue = result.node.value
-		var currentValue = this._currentValue
-		var nodeValue = this.localdata()
-		var id = this.processValue('id', nextValue)
-		var v = this.processValue('value', nextValue)
-		if(nextValue!=currentValue){
-			this.emit('change', v, id)
-			this._currentValue = nextValue
-
-			if(nextValue==nodeValue){
-				this.emit('select', v, id)
-			}
-		}
-		else if(nextValue==nodeValue){
-			this.emit('refresh', v, id)
-		}
-		this.emit('ping', v, id)	
-	}
-  next(this.onChange.bind(this))
-}
-
 Node.prototype.start = function(){
 	var self = this;
+
+	function onChange(err, result, next) {
+		if(!self._status) return	
+		if(err) return next(onChange)
+		if(!result) return next(onChange)
+		if(result.action=='expire'){
+			self.tryLock()
+		}
+		else{
+			var nextValue = result.node.value
+			var currentValue = self._currentValue
+			var nodeValue = self.localdata()
+			var id = self.processValue('id', nextValue)
+			var v = self.processValue('value', nextValue)
+			if(nextValue!=currentValue){
+				self.emit('change', v, id)
+				self._currentValue = nextValue
+
+				if(nextValue==nodeValue){
+					self.emit('select', v, id)
+				}
+			}
+			else if(nextValue==nodeValue){
+				self.emit('refresh', v, id)
+			}
+			self.emit('ping', v, id)	
+		}
+	  next(onChange)
+	}
+
 	this._status = true
-	this._etcd.wait(this._path, this.onChange.bind(this))
+	this._etcd.wait(this._path, onChange)
 	this.tryLock({
 		prevExist:false
 	})
