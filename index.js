@@ -107,8 +107,8 @@ Node.prototype.tryLock = function(){
 
 Node.prototype.onChange = function(err, result, next) {
 	var self = this;
-	if(!this._status) return
-	if(err) throw new Error(err)
+	if(!this._status) return	
+	if(err) return next(onChange)
 	if(!result) return next(onChange)
 	if(result.action=='expire'){
 		this.tryLock()
