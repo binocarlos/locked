@@ -105,8 +105,15 @@ Node.prototype.tryLock = function(){
 	this.writeBlank(this.finishWrite.bind(this))
 }
 
-Node.prototype.start = function(){
+Node.prototype.start = function(done){
 	var self = this;
+
+	var _runDone = false
+
+	function runDone(){
+		if(_runDone) return
+		done && done()
+	}
 
 	function onChange(err, result, next) {
 		if(!self._status) return	
@@ -132,6 +139,7 @@ Node.prototype.start = function(){
 			else if(nextValue==nodeValue){
 				self.emit('refresh', v, id)
 			}
+			runDone()
 			self.emit('ping', v, id)	
 		}
 	  next(onChange)
