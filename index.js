@@ -112,6 +112,7 @@ Node.prototype.start = function(done){
 
 	function runDone(){
 		if(_runDone) return
+		_runDone = true
 		done && done()
 	}
 
