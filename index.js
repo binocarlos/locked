@@ -56,7 +56,7 @@ Node.prototype.value = function(done){
 }
 
 Node.prototype.localid = function(){
-	return this._opts.id
+	return this._id
 }
 
 Node.prototype.localvalue = function(){
