@@ -113,6 +113,10 @@ This event is triggered when the node has been elected and it's value distribute
 
 You can run logic in this function that should only be running on one server at a time.
 
+#### `node.on('deselect', function(){})`
+
+This event is triggered when the node was the leader and now is not the leader (either because another node took leadership or because we were unable to refresh to leader itself)
+
 #### `node.on('refresh', function(value, leaderid){})`
 
 Triggered when the currently selected node has refreshed its value
