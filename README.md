@@ -34,7 +34,7 @@ node.on('change', function(value, nodeid){
 })
 
 // this is run when this node has been selected
-node.on('selected', function(){
+node.on('select', function(){
 	console.log('this server has been elected as the master!')
 })
 
