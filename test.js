@@ -87,23 +87,25 @@ tape('competing locks', function(t){
     console.log('lock1 deselected')
   })
 
-  lock1.start()
-  lock2.start()
-
   setTimeout(function(){
-    console.log('stopping lock1')
-    lock1.stop()
+    lock1.start()
+    lock2.start()
 
     setTimeout(function(){
-      t.equal(lock2.value(), 'pears', 'value = pears')
-      t.equal(lock2.id(), 'node2', 'id = node2')
-      t.equal(wasDeselected, true, 'lock1 was deselected')
-
+      console.log('stopping lock1')
       lock1.stop()
-      lock2.stop()
-      t.end()
+
+      setTimeout(function(){
+        t.equal(lock2.value(), 'pears', 'value = pears')
+        t.equal(lock2.id(), 'node2', 'id = node2')
+        t.equal(wasDeselected, true, 'lock1 was deselected')
+
+        lock1.stop()
+        lock2.stop()
+        t.end()
+      }, 3000)
     }, 3000)
-  }, 3000)
+  }, 1000)
 })
 
 resetEtcd()
