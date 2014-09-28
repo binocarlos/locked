@@ -1,6 +1,8 @@
 locked
 ------
 
+[![Travis](http://img.shields.io/travis/binocarlos/locked.svg?style=flat)](https://travis-ci.org/binocarlos/locked)
+
 distributed consensus on a single value using [etcd](http://github.com/coreos/etcd)
 
 ## install
