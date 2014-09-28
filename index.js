@@ -93,7 +93,7 @@ Node.prototype.write = function(prevValue, done){
 		self._currentValue = null
 		self.emit('deselect')
 		self.tryLock()
-	}, this._ttl)
+	}, this._ttl * 1000)
 
 	this._etcd.set(this._path, this.localdata(), {
 		prevExist:false,
