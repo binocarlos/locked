@@ -71,19 +71,45 @@ Node.prototype.isSelected = function(){
 	return this.id()==this.localid()
 }
 
-Node.prototype.writeBlank = function(done){
+Node.prototype.write = function(prevValue, done){
+	var self = this;
+	var opts = {
+		ttl:this._ttl
+	}
+
+	if(prevValue){
+		opts.prevValue = prevValue
+	}
+	else{
+		opts.prevExist = false
+	}
+
+	var isLeader = this.isSelected()
+
+	// if the timeout triggers it means we were unable to complete
+	// the attempt and must relinquish leadership if we have it
+	var leaderTimeout = setTimeout(function(){
+		if(!isLeader) return
+		self._currentValue = null
+		self.emit('deselect')
+		self.tryLock()
+	}, this._ttl)
+
 	this._etcd.set(this._path, this.localdata(), {
 		prevExist:false,
 		ttl:this._ttl
-	}, done)
+	}, function(err, result){
+		clearTimeout(leaderTimeout)
+		done(err, result)
+	})
+}
+
+Node.prototype.writeBlank = function(done){
+	this.write(null, done)
 }
 
 Node.prototype.writeNext = function(done){
-	this._etcd.set(this._path, this.localdata(), {
-		prevValue:this.localdata(),
-		ttl:this._ttl
-	}, done)
-
+	this.write(this.localdata(), done)
 }
 
 Node.prototype.finishWriteTimed = function(){
@@ -127,6 +153,7 @@ Node.prototype.start = function(done){
 			var nextValue = result.node.value
 			var currentValue = self._currentValue
 			var nodeValue = self.localdata()
+			var wasLeader = self.isSelected()
 			var id = self.processValue('id', nextValue)
 			var v = self.processValue('value', nextValue)
 			if(nextValue!=currentValue){
@@ -135,6 +162,9 @@ Node.prototype.start = function(done){
 
 				if(nextValue==nodeValue){
 					self.emit('select', v, id)
+				}
+				else if(wasLeader){
+					self.emit('deselect')
 				}
 			}
 			else if(nextValue==nodeValue){
