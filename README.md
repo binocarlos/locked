@@ -38,6 +38,11 @@ node.on('select', function(){
 	console.log('this server has been elected as the master!')
 })
 
+// this is run when this node is no longer the leader
+node.on('deselect', function(){
+	console.log('this server is no longer the master!')
+})
+
 // this starts the lock for this node
 node.start()
 ```
