@@ -5,6 +5,8 @@ locked
 
 distributed consensus on a single value using [etcd](http://github.com/coreos/etcd)
 
+[status: not maintained] - I've started using consul which has a [leader election](http://www.consul.io/docs/guides/leader-election.html) module
+
 ## install
 
 ```
