@@ -132,6 +132,12 @@ Triggered when the currently selected node has refreshed its value
 
 Triggered when the leader has checked in and confirmed its leadership
 
+#### `node.on('error', function(error){})`
+
+If there is an error connecting to the etcd instance or with the HTTP request for each leadership poll, this event will be called with the error.
+
+Upon such an error - the lock will cancel its polling for leadership and will leave you to clean up / restart the lock.
+
 ## license
 
 MIT

@@ -143,8 +143,12 @@ Node.prototype.start = function(done){
 	}
 
 	function onChange(err, result, next) {
-		if(!self._status) return	
-		if(err) return next(onChange)
+		if(!self._status) return
+		// dont carry on waiting in error situation
+		if(err){
+			self.emit('error', err)
+			return
+		}
 		if(!result) return next(onChange)
 		if(result.action=='expire'){
 			self.tryLock()

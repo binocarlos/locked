@@ -99,4 +99,23 @@ tape('competing locks', function(t){
   }, 3000)
 })
 
+tape('emit an error event dont carry on waiting', function(t){
+  var locker = locked('tcp://127.0.0.1:4001')
+
+  var lock1 = locker({
+    id:'node1',
+    path:testPath,
+    value:'apples',
+    ttl:2
+  })
+
+  lock1.on('error', function(err){
+    t.equal(err.toString(), 'Error: Invalid protocol: tcp:', 'the error event was emitted')
+    t.end()
+  })
+
+  
+  lock1.start()
+})
+
 resetEtcd()
